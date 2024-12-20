@@ -1,0 +1,74 @@
+[gd_scene load_steps=5 format=3 uid="uid://pgan1bdy4jjm"]
+
+[ext_resource type="Script" path="res://addons/signal_graphs/Util/SignalGraphs/Plugin/SignalGraphEditorRoot.cs" id="1_ah78d"]
+[ext_resource type="Script" path="res://addons/signal_graphs/Util/SignalGraphs/Plugin/GDScriptToCSBridge.cs" id="2_p50uc"]
+[ext_resource type="Script" path="res://addons/signal_graphs/gds_exclusives.gd" id="3_7fo5d"]
+[ext_resource type="Script" path="res://addons/signal_graphs/Util/SignalGraphs/Plugin/Graph/SignalGraphEditor.cs" id="4_xemin"]
+
+[node name="SignalGraphEditor" type="Control" node_paths=PackedStringArray("Editor")]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_ah78d")
+Editor = NodePath("BoxContainer/GraphEdit")
+
+[node name="GDScript to C# Bridge" type="Node" parent="." node_paths=PackedStringArray("GdsExclusives")]
+script = ExtResource("2_p50uc")
+GdsExclusives = NodePath("GDScript Exclusives")
+
+[node name="GDScript Exclusives" type="Node" parent="GDScript to C# Bridge"]
+script = ExtResource("3_7fo5d")
+
+[node name="BoxContainer" type="BoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+vertical = true
+
+[node name="Header" type="MarginContainer" parent="BoxContainer"]
+layout_mode = 2
+
+[node name="FlowContainer" type="FlowContainer" parent="BoxContainer/Header"]
+layout_mode = 2
+theme_override_constants/h_separation = 5
+alignment = 2
+
+[node name="Label" type="Label" parent="BoxContainer/Header/FlowContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Hello"
+
+[node name="Button3" type="Button" parent="BoxContainer/Header/FlowContainer"]
+layout_mode = 2
+text = "Save"
+
+[node name="VSeparator2" type="VSeparator" parent="BoxContainer/Header/FlowContainer"]
+layout_mode = 2
+
+[node name="Button2" type="Button" parent="BoxContainer/Header/FlowContainer"]
+layout_mode = 2
+text = "Load"
+
+[node name="VSeparator" type="VSeparator" parent="BoxContainer/Header/FlowContainer"]
+layout_mode = 2
+
+[node name="Button" type="Button" parent="BoxContainer/Header/FlowContainer"]
+layout_mode = 2
+text = "Reload Plugin"
+
+[node name="GraphEdit" type="GraphEdit" parent="BoxContainer" node_paths=PackedStringArray("GDSToCSBridge")]
+layout_mode = 2
+size_flags_vertical = 3
+right_disconnects = true
+script = ExtResource("4_xemin")
+GDSToCSBridge = NodePath("../../GDScript to C# Bridge")
+
+[connection signal="pressed" from="BoxContainer/Header/FlowContainer/Button3" to="." method="SaveToScene"]
+[connection signal="pressed" from="BoxContainer/Header/FlowContainer/Button2" to="." method="PopulateFromScene" flags=3]
+[connection signal="pressed" from="BoxContainer/Header/FlowContainer/Button" to="." method="ReloadPlugin" flags=3]
