@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using Godot;
-using SoundWaveGame.Objects;
 using Util.SignalGraphs.Plugin.Graph.Elements;
 
 namespace Util.SignalGraphs.Plugin.Graph;
@@ -76,11 +75,11 @@ public partial class SignalGraphEditor
             {
                 var signal = connection.Signal;
                 var callable = connection.Callable;
-                if (node is GameEffector)
-                {
+                // if (node is GameEffector)
+                // {
                     // GD.Print($"{(signal.Owner as Node)?.Name} . {signal.Name} => {node.Name}.{callable.Method} (flags {connection.Flags})");
                     // GD.Print($"Callable method: {callable.Method} ({callable.ArgumentCount}); with flags {connection.Flags} and bound args: {callable.BoundArgumentCount}");
-                }
+                // }
                 var flags = connection.Flags;
 
                 if (signal.Owner is not Node owner) continue;
