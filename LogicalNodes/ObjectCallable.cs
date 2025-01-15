@@ -8,54 +8,49 @@ namespace LogicalNodes;
 
 [Tool]
 [GlobalClass]
-public partial class NodeCallable : Resource
+public partial class ObjectCallable : ValueSource
 {
     [Export]
-    public NodePath NodePath;
+    public ValueSource Target;
     [Export]
     public StringName Method;
-
-    [Export] public bool ErrorOnMissingNode = true;
     
     public Variant Call(Node source)
     {
-        if (source == null) return default;
-        var referencedNode = ErrorOnMissingNode ? source.GetNode(NodePath) : source.GetNodeOrNull(NodePath);
-        return referencedNode?.Call(Method) ?? default;
+        if (Target == null) return default;
+        return Target.GetValue(source).As<GodotObject>().Call(Method);
     }
     public T Call<[MustBeVariant]T>(Node source)
     {
-        if (source == null) return default;
-        var referencedNode = ErrorOnMissingNode ? source.GetNode(NodePath) : source.GetNodeOrNull(NodePath);
-        return referencedNode != null ? referencedNode.Call(Method).As<T>() : default;
+        if (Target == null) return default;
+        return Target.GetValue(source).As<GodotObject>().Call(Method).As<T>();
     }
-    
+
+    public override Variant GetValue(Node source)
+    {
+        return Call(source);
+    }
+
+    public override string ToString()
+    {
+        return $"{Target} :: {Method}()";
+    }
+
 #if TOOLS
     private NodePath _popupSelectedNodePath;
     private StringName _popupSelectedMethodName;
     
-    [InspectorCustomControl(AnchorProperty = nameof(Godot.NodePath), AnchorMode = InspectorPropertyAnchorMode.Before)]
+    [InspectorCustomControl(AnchorProperty = nameof(Target), AnchorMode = InspectorPropertyAnchorMode.Before)]
     public Control SelectMethod()
     {
         var button = new Button();
         button.Icon = EditorInterface.Singleton.GetEditorTheme().GetIcon("Slot", "EditorIcons");
-        if(NodePath is {IsEmpty: false} && Method is {IsEmpty: false})
-            button.Text = $"{NodePath} :: {Method}()";
+        if(Target != null && Method is {IsEmpty: false})
+            button.Text = this.ToString();
         else
             button.Text = "Select Method...";
         button.Pressed += ShowNodePicker;
         
-        // picker.ResourceChanged += (resource) =>
-        // {
-        //     var undoRedo = StandardUtilPlugin.GetUndoRedo();
-        //     var prevResource = GetResource();
-        //     undoRedo.CreateAction("Set resource reference");
-        //     undoRedo.AddDoProperty(this, PropertyName.SetResource, resource);
-        //     undoRedo.AddDoMethod(this, GodotObject.MethodName.NotifyPropertyListChanged);
-        //     undoRedo.AddUndoProperty(this, PropertyName.SetResource, prevResource);
-        //     undoRedo.AddUndoMethod(this, GodotObject.MethodName.NotifyPropertyListChanged);
-        //     undoRedo.CommitAction();
-        // };
         return button;
     }
 
@@ -105,10 +100,10 @@ public partial class NodeCallable : Resource
     {
         var undoRedo = StandardUtilPlugin.GetUndoRedo();
         undoRedo.CreateAction("Set node callable");
-        undoRedo.AddDoProperty(this, PropertyName.NodePath, _popupSelectedNodePath);
+        undoRedo.AddDoProperty(this, PropertyName.Target, new NodeValue(_popupSelectedNodePath));
         undoRedo.AddDoProperty(this, PropertyName.Method, _popupSelectedMethodName);
         undoRedo.AddDoMethod(this, GodotObject.MethodName.NotifyPropertyListChanged);
-        undoRedo.AddUndoProperty(this, PropertyName.NodePath, NodePath);
+        undoRedo.AddUndoProperty(this, PropertyName.Target, Target);
         undoRedo.AddUndoProperty(this, PropertyName.Method, Method);
         undoRedo.AddUndoMethod(this, GodotObject.MethodName.NotifyPropertyListChanged);
         undoRedo.CommitAction();
