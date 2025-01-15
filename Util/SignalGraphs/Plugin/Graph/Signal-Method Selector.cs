@@ -6,11 +6,13 @@ namespace Util.SignalGraphs.Plugin.Graph;
 
 public partial class SignalGraphEditor
 {
-    private int _lastSelectedSignalMethodTabIndex = 0;
+    private static int _lastSelectedSignalMethodTabIndex = 0;
+
+    public delegate void SignalSelectedEventHandler(Dictionary signal);
+    public delegate void MethodSelectedEventHandler(Dictionary method);
     
-    public void ShowSignalMethodSelector(SignalNodeGraphNode graphNode, int forceStartTab)
+    public static void ShowSignalMethodSelector(Node node, int forceStartTab, SignalSelectedEventHandler signalCallback, MethodSelectedEventHandler methodCallback)
     {
-        var node = graphNode.Node;
         if (node == null) return;
         
         if (forceStartTab < 0) forceStartTab = _lastSelectedSignalMethodTabIndex;
@@ -123,7 +125,7 @@ public partial class SignalGraphEditor
         PopulateTree("");
         
         dialog.Visible = false;
-        this.AddChild(dialog);
+        EditorInterface.Singleton.GetEditorMainScreen().AddChild(dialog);
         dialog.PopupCentered();
         
         return;
@@ -173,13 +175,13 @@ public partial class SignalGraphEditor
                 var method = methodList[selectedIndex];
                 var methodName = method["name"].AsStringName();
                 GD.Print($"Selected method: {method}");
-                graphNode.MethodAddRequested(method);
+                methodCallback?.Invoke(method);
             } else if (selectedType == 1)
             {
                 // signal
                 var signal = signalList[selectedIndex];
                 GD.Print($"Selected signal: {signal}");
-                graphNode.SignalAddRequested(signal);
+                signalCallback?.Invoke(signal);
             }
             dialog.QueueFree();
             // GD.Print($"Submit {tree.GetSelected()}");
@@ -187,7 +189,7 @@ public partial class SignalGraphEditor
     }
 
     
-    private Window CreateSignalMethodSelector(int forceStartTab, out LineEdit searchBar, out Tree tree, out Button submitButton,
+    private static Window CreateSignalMethodSelector(int forceStartTab, out LineEdit searchBar, out Tree tree, out Button submitButton,
         out ButtonGroup tabGroup)
     {
         var theme = EditorInterface.Singleton.GetEditorTheme();

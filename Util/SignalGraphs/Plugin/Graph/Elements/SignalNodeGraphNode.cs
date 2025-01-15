@@ -204,7 +204,7 @@ public partial class SignalNodeGraphNode : GraphNode
 
     private void OnAddButtonPressed()
     {
-        _editor.ShowSignalMethodSelector(this, -1);
+        SignalGraphEditor.ShowSignalMethodSelector(this.Node, -1, SignalAddRequested, MethodAddRequested);
     }
 
 

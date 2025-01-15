@@ -36,7 +36,7 @@ public partial class SignalGraphEditor
             if (slotType == PortTypeAddMethod || slotType == PortTypeAddSignal)
             {
                 this.ForceConnectionDragEnd();
-                ShowSignalMethodSelector(graphNode, slotType == PortTypeAddMethod ? 0 : 1);
+                ShowSignalMethodSelector(graphNode.Node, slotType == PortTypeAddMethod ? 0 : 1, graphNode.SignalAddRequested, graphNode.MethodAddRequested);
             }
         }
     }
