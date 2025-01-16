@@ -1,6 +1,6 @@
-﻿using Godot;
+﻿using System;
+using Godot;
 using Godot.Collections;
-using Util.SignalGraphs.Plugin.Graph.Elements;
 
 namespace Util.SignalGraphs.Plugin.Graph;
 
@@ -21,26 +21,17 @@ public partial class SignalGraphEditor
         var dialog = CreateSignalMethodSelector(forceStartTab, out var searchBar, out var tree, out var submitButton, out var tabGroup);
         var theme = dialog.Theme;
         
-        // EditorInterface.Singleton.PopupDialogCentered(dialog);
         var signalList = new Array<Dictionary>();
+        CollectMembers(node, signalList,
+            s => s.GetScriptSignalList(),
+            (db, name) => db.ClassGetSignalList(name),
+            o => o.GetSignalList());
+        
         var methodList = new Array<Dictionary>();
-
-        var script = node.GetScript().As<Script>();
-        while (script != null)
-        {
-            // GD.Print($"Script: {script.ResourcePath}");
-            signalList.AddRange(script.GetScriptSignalList());
-            methodList.AddRange(script.GetScriptMethodList());
-            script = script.GetBaseScript();
-        }
-        StringName className = node.GetClass();
-        while (className != null && !className.IsEmpty)
-        {
-            // GD.Print($"Class: {className}");
-            signalList.AddRange(ClassDB.ClassGetSignalList(className));
-            methodList.AddRange(ClassDB.ClassGetMethodList(className));
-            className = ClassDB.Singleton.GetParentClass(className);
-        }
+        CollectMembers(node, methodList,
+            s => s.GetScriptMethodList(),
+            (db, name) => db.ClassGetMethodList(name),
+            o => o.GetMethodList());
 
         void PopulateTree(string filter)
         {
@@ -279,5 +270,56 @@ public partial class SignalGraphEditor
         dialog.CloseRequested += dialog.QueueFree;
         
         return dialog;
+    }
+
+    private static void CollectMembers(GodotObject obj,
+        Array<Dictionary> list,
+        Func<Script, Array<Dictionary>> scriptGetter,
+        Func<ClassDBInstance, StringName, Array<Dictionary>> classGetter,
+        Func<GodotObject, Array<Dictionary>> instanceGetter)
+    {
+        var nameList = new Array<StringName>();
+
+        // Add members by script
+        var script = obj.GetScript().As<Script>();
+        while (script != null && scriptGetter != null)
+        {
+            // GD.Print($"Script: {script.ResourcePath}");
+            foreach (var def in scriptGetter(script))
+            {
+                var name = def["name"].AsStringName();
+                if (nameList.Contains(name)) continue;
+                list.Add(def);
+                nameList.Add(def["name"].AsStringName());
+            }
+            script = script.GetBaseScript();
+        }
+        // Add members by class
+        StringName className = obj.GetClass();
+        while (className != null && !className.IsEmpty && classGetter != null)
+        {
+            // GD.Print($"Class: {className}");
+            foreach (var def in classGetter(ClassDB.Singleton, className))
+            {
+                var name = def["name"].AsStringName();
+                if (nameList.Contains(name)) continue;
+                list.Add(def);
+                nameList.Add(def["name"].AsStringName());
+            }
+            className = ClassDB.GetParentClass(className);
+        }
+        // Add dynamic signals and methods for this specific node
+        if (instanceGetter != null)
+        {
+            var insertionIndex = 0;
+            foreach (var def in instanceGetter(obj))
+            {
+                var name = def["name"].AsStringName();
+                if (nameList.Contains(name)) continue;
+                nameList.Add(name);
+                list.Insert(insertionIndex, def);
+                insertionIndex++;
+            }
+        }
     }
 }
