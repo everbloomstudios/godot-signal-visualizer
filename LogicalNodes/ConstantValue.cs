@@ -1,5 +1,6 @@
 ﻿using EditorUtil;
 using Godot;
+using Godot.Collections;
 
 namespace LogicalNodes;
 
@@ -8,26 +9,28 @@ namespace LogicalNodes;
 public partial class ConstantValue : ValueSource
 {
     [Export]
+    public Variant.Type Type;
+    [Export]
     public Variant Value;
 
     public override Variant GetValue(Node source)
     {
         return Value;
     }
-    
-#if TOOLS
-    // [InspectorCustomControl(AnchorProperty = nameof(Value), AnchorMode = InspectorPropertyAnchorMode.Before)]
-    // public Control SelectMethod()
-    // {
-    //     var control = new EditorProperty();
-    //     button.Icon = EditorInterface.Singleton.GetEditorTheme().GetIcon("Property", "EditorIcons");
-    //     if(NodePath is {IsEmpty: false} && Property is {IsEmpty: false})
-    //         button.Text = $"{NodePath} . {Property}()";
-    //     else
-    //         button.Text = "Select Property...";
-    //     button.Pressed += ShowNodePicker;
-    //     
-    //     return control;
-    // }
-#endif
+
+    public override void _ValidateProperty(Dictionary property)
+    {
+        var propName = property["name"].AsStringName();
+        var usage = property["usage"].As<PropertyUsageFlags>();
+
+        if (propName == PropertyName.Type)
+        {
+            usage |= PropertyUsageFlags.UpdateAllIfModified;
+            property["usage"] = Variant.From(usage);
+        }
+        if (propName == PropertyName.Value)
+        {
+            property["type"] = Variant.From(Type);
+        }
+    }
 }
