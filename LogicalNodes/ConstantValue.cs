@@ -33,4 +33,9 @@ public partial class ConstantValue : ValueSource
             property["type"] = Variant.From(Type);
         }
     }
+
+    public override string ToString()
+    {
+        return Value.ToString();
+    }
 }

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Text;
 using EditorUtil;
 using Godot;
 using Godot.Collections;
@@ -14,16 +15,30 @@ public partial class ObjectCallable : ValueSource
     public ValueSource Target;
     [Export]
     public StringName Method;
+
+    [Export] public ValueSource[] Args;
     
     public Variant Call(Node source)
     {
         if (Target == null) return default;
-        return Target.GetValue(source).As<GodotObject>().Call(Method);
+        return Target.GetValue(source).As<GodotObject>().Call(Method, EvaluateArgs(source));
     }
     public T Call<[MustBeVariant]T>(Node source)
     {
         if (Target == null) return default;
-        return Target.GetValue(source).As<GodotObject>().Call(Method).As<T>();
+        return Target.GetValue(source).As<GodotObject>().Call(Method, EvaluateArgs(source)).As<T>();
+    }
+
+    private Variant[] EvaluateArgs(Node source)
+    {
+        if (Args == null) return null;
+        var args = new Variant[Args.Length];
+        for (int i = 0; i < Args.Length; i++)
+        {
+            args[i] = Args[i]?.GetValue(source) ?? default;
+        }
+
+        return args;
     }
 
     public override Variant GetValue(Node source)
@@ -33,7 +48,22 @@ public partial class ObjectCallable : ValueSource
 
     public override string ToString()
     {
-        return $"{Target} :: {Method}()";
+        var sb = new StringBuilder();
+        sb.Append(Target);
+        sb.Append("  :: ");
+        sb.Append(Method);
+        sb.Append('(');
+        if (Args is { Length: > 0 })
+        {
+            for (var i = 0; i < Args.Length; i++)
+            {
+                sb.Append(Args[i]);
+                if(i < Args.Length-1)
+                    sb.Append(", ");
+            }
+        }
+        sb.Append(')');
+        return sb.ToString();
     }
 
 #if TOOLS
