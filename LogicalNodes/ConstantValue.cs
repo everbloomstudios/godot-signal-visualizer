@@ -1,11 +1,13 @@
 ﻿using EditorUtil;
 using Godot;
 using Godot.Collections;
+using Util.SignalGraphs.Plugin;
 
 namespace LogicalNodes;
 
 [Tool]
 [GlobalClass]
+[Icon($"{SignalGraphsPlugin.IconRoot}/constant.png")]
 public partial class ConstantValue : ValueSource
 {
     [Export]

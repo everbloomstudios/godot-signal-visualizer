@@ -1,9 +1,11 @@
 ﻿using Godot;
+using Util.SignalGraphs.Plugin;
 
 namespace LogicalNodes;
 
 [Tool]
 [GlobalClass]
+[Icon($"{SignalGraphsPlugin.IconRoot}/any_of.png")]
 public partial class AnyOfValues : ValueSource
 {
     [Export]

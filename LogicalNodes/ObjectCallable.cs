@@ -3,12 +3,14 @@ using System.Text;
 using EditorUtil;
 using Godot;
 using Godot.Collections;
+using Util.SignalGraphs.Plugin;
 using Util.SignalGraphs.Plugin.Graph;
 
 namespace LogicalNodes;
 
 [Tool]
 [GlobalClass]
+[Icon($"{SignalGraphsPlugin.IconRoot}/callable.png")]
 public partial class ObjectCallable : ValueSource
 {
     [Export]

@@ -35,6 +35,16 @@ public partial class SignalNodeGraphNode : GraphNode
         this.NodeInstanceId = node.GetInstanceId();
         this.Name = NodeInstanceId.ToString();
         this.Title = node.Name;
+
+        var icon = SignalGraphEditor.GetObjectIcon(node);
+        if (icon != null)
+        {
+            var iconRect = new TextureRect();
+            iconRect.Texture = icon ?? EditorInterface.Singleton.GetEditorTheme().GetIcon("Node", "EditorIcons");
+            iconRect.StretchMode = TextureRect.StretchModeEnum.KeepAspectCentered;
+            this.GetTitlebarHBox().AddChild(iconRect, @internal: InternalMode.Front);
+        }
+        
         
         _signalPorts = new Godot.Collections.Dictionary<StringName, int>();
         _methodPorts = new Godot.Collections.Dictionary<StringName, int>();
