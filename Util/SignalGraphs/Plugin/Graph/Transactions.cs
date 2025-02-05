@@ -1,4 +1,5 @@
-﻿using Godot;
+﻿#if TOOLS
+using Godot;
 using Godot.Collections;
 
 namespace Util.SignalGraphs.Plugin.Graph;
@@ -148,3 +149,4 @@ public partial class SignalGraphEditor
         if (createAndCommit) EndTransaction();
     }
 }
+#endif

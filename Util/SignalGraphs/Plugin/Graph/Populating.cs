@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿#if TOOLS
+using System.Collections.Generic;
 using Godot;
 using Util.SignalGraphs.Plugin.Graph.Elements;
 
@@ -97,3 +98,4 @@ public partial class SignalGraphEditor
         }
     }
 }
+#endif

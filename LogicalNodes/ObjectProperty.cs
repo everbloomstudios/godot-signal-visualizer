@@ -1,12 +1,11 @@
 ﻿using EditorUtil;
 using Godot;
-using Util.SignalGraphs.Plugin;
 
 namespace LogicalNodes;
 
 [Tool]
 [GlobalClass]
-[Icon($"{SignalGraphsPlugin.IconRoot}/property.png")]
+[Icon($"{LogicalNodeIcons.IconRoot}/property.png")]
 public partial class ObjectProperty : ValueSource
 {
     [Export]

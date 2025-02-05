@@ -1,4 +1,5 @@
-﻿using System;
+﻿#if TOOLS
+using System;
 using System.Linq;
 using System.Reflection;
 using System.Text;
@@ -84,3 +85,4 @@ public partial class SignalGraphEditor
         return null;
     }
 }
+#endif

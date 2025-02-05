@@ -1,11 +1,10 @@
 ﻿using Godot;
-using Util.SignalGraphs.Plugin;
 
 namespace LogicalNodes;
 
 [Tool]
 [GlobalClass]
-[Icon($"{SignalGraphsPlugin.IconRoot}/node_value.png")]
+[Icon($"{LogicalNodeIcons.IconRoot}/node_value.png")]
 public partial class ValueSourceNode : Node, IValueSource
 {
     [Export]

@@ -1,4 +1,5 @@
-﻿using Godot;
+﻿#if TOOLS
+using Godot;
 using Godot.Collections;
 using Util.SignalGraphs.Plugin.Graph.Elements;
 
@@ -70,3 +71,4 @@ public partial class SignalGraphEditor : GraphEdit
         }
     }
 }
+#endif

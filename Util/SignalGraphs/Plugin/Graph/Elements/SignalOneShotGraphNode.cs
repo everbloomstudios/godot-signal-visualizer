@@ -1,4 +1,5 @@
-﻿using Godot;
+﻿#if TOOLS
+using Godot;
 using Godot.Collections;
 
 namespace Util.SignalGraphs.Plugin.Graph.Elements;
@@ -32,3 +33,4 @@ public partial class SignalOneShotGraphNode : GraphNode
         return dict;
     }
 }
+#endif

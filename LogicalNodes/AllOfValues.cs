@@ -1,11 +1,10 @@
 ﻿using Godot;
-using Util.SignalGraphs.Plugin;
 
 namespace LogicalNodes;
 
 [Tool]
 [GlobalClass]
-[Icon($"{SignalGraphsPlugin.IconRoot}/all_of.png")]
+[Icon($"{LogicalNodeIcons.IconRoot}/all_of.png")]
 public partial class AllOfValues : ValueSource
 {
     [Export]

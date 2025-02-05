@@ -7,7 +7,6 @@ namespace Util.SignalGraphs.Plugin;
 public partial class SignalGraphsPlugin : EditorPlugin
 {
     public const string PluginRoot = "res://addons/signal_graphs";
-    public const string IconRoot = "res://addons/signal_graphs/icons";
     private PackedScene _graphEditorTemplate =
         GD.Load<PackedScene>($"{PluginRoot}/scenes/signal_graph_editor.tscn");
     private SignalGraphEditorRoot _graphEditor;

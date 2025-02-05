@@ -1,3 +1,4 @@
+#if TOOLS
 using Godot;
 
 namespace Util.SignalGraphs.Plugin;
@@ -28,3 +29,4 @@ public partial class SignalGraphEditorRoot : Control
 		Editor?.Save(sceneRoot);
 	}
 }
+#endif

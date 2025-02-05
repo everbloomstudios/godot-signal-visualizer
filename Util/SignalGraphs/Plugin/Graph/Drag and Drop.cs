@@ -1,4 +1,5 @@
-﻿using Godot;
+﻿#if TOOLS
+using Godot;
 using Util.SignalGraphs.Plugin.Graph.Elements;
 
 namespace Util.SignalGraphs.Plugin.Graph;
@@ -46,3 +47,4 @@ public partial class SignalGraphEditor
         }
     }
 }
+#endif

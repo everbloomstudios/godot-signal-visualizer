@@ -1,11 +1,10 @@
 ﻿using Godot;
-using Util.SignalGraphs.Plugin;
 
 namespace LogicalNodes;
 
 [Tool]
 [GlobalClass]
-[Icon($"{SignalGraphsPlugin.IconRoot}/none_of.png")]
+[Icon($"{LogicalNodeIcons.IconRoot}/none_of.png")]
 public partial class NoneOfValues : ValueSource
 {
     [Export]

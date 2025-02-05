@@ -1,7 +1,5 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
-using System.Text;
+﻿#if TOOLS
+using System.Collections.Generic;
 using Godot;
 using Godot.Collections;
 
@@ -478,3 +476,4 @@ public partial class SignalNodeGraphNode : GraphNode
         }
     }
 }
+#endif

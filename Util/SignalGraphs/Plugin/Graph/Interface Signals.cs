@@ -1,4 +1,5 @@
-﻿using Godot;
+﻿#if  TOOLS
+using Godot;
 using Godot.Collections;
 using Util.SignalGraphs.Plugin.Graph.Elements;
 
@@ -154,3 +155,4 @@ public partial class SignalGraphEditor
             _sceneRoot.Name = _sceneRoot.Name;
     }
 }
+#endif

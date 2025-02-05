@@ -1,4 +1,5 @@
-﻿using System;
+﻿#if TOOLS
+using System;
 using Godot;
 using Godot.Collections;
 
@@ -323,3 +324,4 @@ public partial class SignalGraphEditor
         }
     }
 }
+#endif
