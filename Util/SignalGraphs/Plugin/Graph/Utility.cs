@@ -41,6 +41,10 @@ public partial class SignalGraphEditor
             {
                 sb.Append(arg["class_name"].AsString());
             }
+            else if (type == Variant.Type.Nil)
+            {
+                sb.Append("Variant");
+            }
             else
             {
                 sb.Append(type);
