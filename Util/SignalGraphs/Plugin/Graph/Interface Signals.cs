@@ -42,7 +42,7 @@ public partial class SignalGraphEditor
         }
     }
 
-    private void OnDeleteNodesRequest(Array nodes)
+    private void OnDeleteNodesRequest(Array<StringName> nodes)
     {
         TransactionDeleteNodes(nodes);
     }

@@ -67,16 +67,14 @@ public partial class SignalGraphEditor
         if (createAndCommit) EndTransaction();
     }
     
-    public void TransactionDeleteNodes(Array nodes)
+    public void TransactionDeleteNodes(Array<StringName> nodes)
     {
         BeginTransaction("Delete graph nodes",  Godot.UndoRedo.MergeMode.All, backwardUndoOps: true);
         
         // First, remove connections
         var connectionList = this.GetConnectionList();
-        foreach (var elem in nodes)
+        foreach (var nodeName in nodes)
         {
-            var nodeName = elem.AsStringName();
-
             for (var i = 0; i < connectionList.Count; i++)
             {
                 var connection = connectionList[i];
@@ -95,10 +93,8 @@ public partial class SignalGraphEditor
         }
         
         // Then, remove frame attachments
-        foreach (var elem in nodes)
+        foreach (var nodeName in nodes)
         {
-            var nodeName = elem.AsStringName();
-
             // If inside a frame, remove that attachment
             TransactionAttachToFrame(nodeName, null, false);
             
@@ -116,9 +112,8 @@ public partial class SignalGraphEditor
         }
         
         // Lastly remove nodes from graph
-        foreach (var elem in nodes)
+        foreach (var nodeName in nodes)
         {
-            var nodeName = elem.AsStringName();
             var node = GetNode(new NodePath(nodeName));
             if (node == null) continue;
             TransactionRemoveChild(node, undoReference: true, createAndCommit: false);
