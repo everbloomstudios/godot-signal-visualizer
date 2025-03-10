@@ -1,9 +1,9 @@
 [gd_scene load_steps=5 format=3 uid="uid://pgan1bdy4jjm"]
 
-[ext_resource type="Script" path="res://addons/signal_graphs/Util/SignalGraphs/Plugin/SignalGraphEditorRoot.cs" id="1_ah78d"]
-[ext_resource type="Script" path="res://addons/signal_graphs/Util/SignalGraphs/Plugin/GDScriptToCSBridge.cs" id="2_p50uc"]
-[ext_resource type="Script" path="res://addons/signal_graphs/gds_exclusives.gd" id="3_7fo5d"]
-[ext_resource type="Script" path="res://addons/signal_graphs/Util/SignalGraphs/Plugin/Graph/SignalGraphEditor.cs" id="4_xemin"]
+[ext_resource type="Script" uid="uid://bjtb8b6nb6gk5" path="res://addons/signal_graphs/Util/SignalGraphs/Plugin/SignalGraphEditorRoot.cs" id="1_ah78d"]
+[ext_resource type="Script" uid="uid://bgw7bs4cn4uhi" path="res://addons/signal_graphs/Util/SignalGraphs/Plugin/GDScriptToCSBridge.cs" id="2_p50uc"]
+[ext_resource type="Script" uid="uid://1x4eutiitiem" path="res://addons/signal_graphs/gds_exclusives.gd" id="3_7fo5d"]
+[ext_resource type="Script" uid="uid://btdhmnb25o8ll" path="res://addons/signal_graphs/Util/SignalGraphs/Plugin/Graph/SignalGraphEditor.cs" id="4_xemin"]
 
 [node name="SignalGraphEditor" type="Control" node_paths=PackedStringArray("Editor")]
 layout_mode = 3
