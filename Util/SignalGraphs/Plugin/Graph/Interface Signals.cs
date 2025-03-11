@@ -42,6 +42,15 @@ public partial class SignalGraphEditor
         }
     }
 
+    // Both methods here for cross-compatibility between Godot 4.3 and 4.4
+    // 4.3:
+    private void OnDeleteNodesRequest(Array nodes)
+    {
+        TransactionDeleteNodes(new Array<StringName>(nodes));
+    }
+
+    // Both methods here for cross-compatibility between Godot 4.3 and 4.4
+    // 4.4:
     private void OnDeleteNodesRequest(Array<StringName> nodes)
     {
         TransactionDeleteNodes(nodes);
