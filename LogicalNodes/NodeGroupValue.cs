@@ -12,12 +12,14 @@ public partial class NodeGroupValue : ValueSource, IEnumerableValueSource<Node>,
     
     public override Variant GetValue(Node source)
     {
-        return source.GetTree().GetFirstNodeInGroup(GroupName);
+        return source.GetTree()?.GetFirstNodeInGroup(GroupName) ?? default;
     }
 
     IEnumerable<Variant> IEnumerableValueSource<Variant>.EnumerateValues(Node source)
     {
-        foreach (var node in source.GetTree().GetNodesInGroup(GroupName))
+        var tree = source.GetTree();
+        if(tree == null) yield break;
+        foreach (var node in tree.GetNodesInGroup(GroupName))
         {
             yield return node;
         }
@@ -25,7 +27,9 @@ public partial class NodeGroupValue : ValueSource, IEnumerableValueSource<Node>,
 
     IEnumerable<Node> IEnumerableValueSource<Node>.EnumerateValues(Node source)
     {
-        foreach (var node in source.GetTree().GetNodesInGroup(GroupName))
+        var tree = source.GetTree();
+        if(tree == null) yield break;
+        foreach (var node in tree.GetNodesInGroup(GroupName))
         {
             yield return node;
         }
