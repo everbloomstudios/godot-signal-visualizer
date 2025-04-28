@@ -31,8 +31,19 @@ public partial class ObjectCallable : ValueSource
         if (Target == null) return default;
         return Target.GetValue(source).As<GodotObject>().Call(Method, EvaluateArgs(source)).As<T>();
     }
+    
+    public Variant CallWithArgs(Node source, params Variant[] args)
+    {
+        if (Target == null) return default;
+        return Target.GetValue(source).As<GodotObject>().Call(Method, args);
+    }
+    public T CallWithArgs<[MustBeVariant]T>(Node source, params Variant[] args)
+    {
+        if (Target == null) return default;
+        return Target.GetValue(source).As<GodotObject>().Call(Method, args).As<T>();
+    }
 
-    private Variant[] EvaluateArgs(Node source)
+    public Variant[] EvaluateArgs(Node source)
     {
         if (Args == null) return null;
         var args = new Variant[Args.Length];
