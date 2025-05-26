@@ -4,7 +4,8 @@ using Godot;
 
 namespace LogicalNodes;
 
-public enum AuthorityMode {
+public enum AuthorityMode
+{
     Authority,
     AnyPeer,
     NonAuthority
@@ -19,16 +20,6 @@ public static class AuthorityModeExt
             AuthorityMode.Authority => node.IsMultiplayerAuthority(),
             AuthorityMode.AnyPeer => true,
             AuthorityMode.NonAuthority => !node.IsMultiplayerAuthority(),
-            _ => throw new ArgumentOutOfRangeException(nameof(mode), mode, null)
-        };
-    }
-    public static bool CanExecuteNoTree(this AuthorityMode mode, Node node)
-    {
-        return mode switch
-        {
-            AuthorityMode.Authority => node.GetMultiplayerAuthority() == MultiplayerManager.Instance.Multiplayer.GetUniqueId(),
-            AuthorityMode.AnyPeer => true,
-            AuthorityMode.NonAuthority => node.GetMultiplayerAuthority() != MultiplayerManager.Instance.Multiplayer.GetUniqueId(),
             _ => throw new ArgumentOutOfRangeException(nameof(mode), mode, null)
         };
     }
