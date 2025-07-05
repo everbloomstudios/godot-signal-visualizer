@@ -10,7 +10,7 @@ public partial class SignalPortOutbound : SignalPort
 {
     public void Emitv(Array args)
     {
-        GetParent<SignalStation>()?.HandleEmit(this, args);
+        GetParent<SignalStation>()?.Emit(this.Name, args);
     }
 
     public void Emit()

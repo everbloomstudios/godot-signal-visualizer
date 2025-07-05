@@ -11,21 +11,21 @@ public partial class SignalStation : Node
     private Array<SignalStation> _connectedStations = new();
     private Array<SignalPort> _ports = new();
     
-    public void HandleEmit(SignalPortOutbound port, Array args)
+    public void Emit(StringName portName, Array args)
     {
         foreach (var station in _connectedStations)
         {
-            station.HandleReceive(port, args);
+            station.Receive(portName, args);
         }
     }
 
-    private void HandleReceive(SignalPortOutbound sourcePort, Array args)
+    public void Receive(StringName portName, Array args)
     {
         foreach (var ownPort in _ports)
         {
-            if (ownPort is SignalPortInbound inbound && ownPort.Name == sourcePort.Name)
+            if (ownPort is SignalPortInbound inbound && ownPort.Name == portName)
             {
-                inbound.HandleReceive(sourcePort, args);
+                inbound.HandleReceive(args);
             }
         }
     }

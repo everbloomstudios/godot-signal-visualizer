@@ -17,7 +17,7 @@ public partial class SignalPortInbound : SignalPort
 
     [Export] public Array<ObjectCallable> Callables = new();
 
-    public void HandleReceive(SignalPortOutbound sourcePort, Array args)
+    public void HandleReceive(Array args)
     {
         _receivingArgs = args;
         try
