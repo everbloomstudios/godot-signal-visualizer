@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Godot;
 using Godot.Collections;
+using Util;
 using Array = Godot.Collections.Array;
 
 namespace LogicalNodes.Signals;
@@ -13,7 +14,6 @@ namespace LogicalNodes.Signals;
 public partial class SignalStation : Node
 {
     private Array<SignalStation> _connectedStations = new();
-    private Array<SignalPort> _ports = new();
 
     private System.Collections.Generic.Dictionary<StringName, List<Callable>> _directOutboundConnections;
     private System.Collections.Generic.Dictionary<StringName, List<Callable>> _directInboundConnections;
@@ -29,7 +29,8 @@ public partial class SignalStation : Node
 
     public void Receive(StringName portName, Array args)
     {
-        foreach (var ownPort in _ports)
+        var ownPort = this.GetNodeOrNull<SignalPort>(new NodePath(portName));
+        if (ownPort != null && ownPort.GetParent() == this)
         {
             if (ownPort is SignalPortInbound inbound && ownPort.Name == portName)
             {
@@ -67,28 +68,6 @@ public partial class SignalStation : Node
         station.DisconnectStation(this);
     }
     
-
-    public override void _EnterTree()
-    {
-        this.Connect(Node.SignalName.ChildEnteredTree, new Callable(this, MethodName.OnChildEnteredTree));
-        this.Connect(Node.SignalName.ChildExitingTree, new Callable(this, MethodName.OnChildExitingTree));
-    }
-
-    public override void _ExitTree()
-    {
-        this.Disconnect(Node.SignalName.ChildEnteredTree, new Callable(this, MethodName.OnChildEnteredTree));
-        this.Disconnect(Node.SignalName.ChildExitingTree, new Callable(this, MethodName.OnChildExitingTree));
-    }
-
-    private void OnChildEnteredTree(Node node)
-    {
-        if (node is SignalPort port) _ports.Add(port);
-    }
-
-    private void OnChildExitingTree(Node node)
-    {
-        if (node is SignalPort port) _ports.Remove(port);
-    }
 
     public override void _Notification(int what)
     {
