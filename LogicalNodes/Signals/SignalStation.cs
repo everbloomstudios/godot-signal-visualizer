@@ -17,6 +17,11 @@ public partial class SignalStation : Node
 
     private System.Collections.Generic.Dictionary<StringName, List<Callable>> _directOutboundConnections;
     private System.Collections.Generic.Dictionary<StringName, List<Callable>> _directInboundConnections;
+
+    public void Emit(StringName portName)
+    {
+        Emit(portName, null);
+    }
     
     public void Emit(StringName portName, Array args)
     {
@@ -25,6 +30,11 @@ public partial class SignalStation : Node
         {
             station.Receive(portName, args);
         }
+    }
+
+    public void Receive(StringName portName)
+    {
+        Receive(portName, null);
     }
 
     public void Receive(StringName portName, Array args)
