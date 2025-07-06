@@ -1,5 +1,9 @@
-﻿using Godot;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using Godot;
 using Godot.Collections;
+using Array = Godot.Collections.Array;
 
 namespace LogicalNodes.Signals;
 
@@ -10,9 +14,13 @@ public partial class SignalStation : Node
 {
     private Array<SignalStation> _connectedStations = new();
     private Array<SignalPort> _ports = new();
+
+    private System.Collections.Generic.Dictionary<StringName, List<Callable>> _directOutboundConnections;
+    private System.Collections.Generic.Dictionary<StringName, List<Callable>> _directInboundConnections;
     
     public void Emit(StringName portName, Array args)
     {
+        InvokeDirectCallbacks(_directOutboundConnections, portName, args);
         foreach (var station in _connectedStations)
         {
             station.Receive(portName, args);
@@ -25,9 +33,10 @@ public partial class SignalStation : Node
         {
             if (ownPort is SignalPortInbound inbound && ownPort.Name == portName)
             {
-                inbound.HandleReceive(args);
+                inbound.Receive(args);
             }
         }
+        InvokeDirectCallbacks(_directInboundConnections, portName, args);
     }
 
     public void ConnectStation(SignalStation station)
@@ -89,6 +98,39 @@ public partial class SignalStation : Node
             {
                 if(station != this)
                     station.DisconnectStation(this);
+            }
+        }
+    }
+
+    public void ConnectDirectOutbound(StringName portName, Callable callable)
+    {
+        ConnectDirect(ref _directOutboundConnections, portName, callable);
+    }
+
+    public void ConnectDirectInbound(StringName portName, Callable callable)
+    {
+        ConnectDirect(ref _directInboundConnections, portName, callable);
+    }
+
+    private static void ConnectDirect(ref System.Collections.Generic.Dictionary<StringName, List<Callable>> dictRef,
+        StringName portName, Callable callable)
+    {
+        dictRef ??= new();
+        if (!dictRef.TryGetValue(portName, out var list))
+        {
+            list = dictRef[portName] = new();
+        }
+        if(!list.Contains(callable)) list.Add(callable);
+    }
+    private static void InvokeDirectCallbacks(System.Collections.Generic.Dictionary<StringName, List<Callable>> dict,
+        StringName portName, Array args)
+    {
+        if (dict?.TryGetValue(portName, out var directCallables) ?? false)
+        {
+            var argsArr = args?.ToArray() ?? System.Array.Empty<Variant>();
+            foreach (var callable in directCallables)
+            {
+                callable.Call(argsArr);
             }
         }
     }
