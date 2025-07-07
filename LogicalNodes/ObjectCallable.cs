@@ -1,5 +1,4 @@
-﻿using System;
-using System.Text;
+﻿using System.Text;
 using EditorUtil;
 using Godot;
 using Godot.Collections;
