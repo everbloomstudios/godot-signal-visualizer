@@ -126,7 +126,7 @@ public partial class SignalNodeGraphNode : GraphNode
                 Colors.Black,
                 true,
                 SignalGraphEditor.PortTypeSignal,
-                Colors.White);
+                new Color(0xff786bff));
             _signalPorts[signalName] = leftPortIndex;
 
             leftPortIndex++;
@@ -160,7 +160,7 @@ public partial class SignalNodeGraphNode : GraphNode
             this.SetSlot(this.GetChildCount() - 1,
                 true,
                 SignalGraphEditor.PortTypeSignal,
-                Colors.Aqua,
+                new Color(0x73f280ff),
                 false,
                 -1,
                 Colors.Black);
