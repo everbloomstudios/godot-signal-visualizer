@@ -13,6 +13,16 @@ public partial class ConstantValue : ValueSource
     [Export]
     public Variant Value;
 
+    public ConstantValue()
+    {
+    }
+
+    public ConstantValue(Variant value)
+    {
+        Type = value.VariantType;
+        Value = value;
+    }
+
     public override Variant GetValue(Node source)
     {
         return Value;
