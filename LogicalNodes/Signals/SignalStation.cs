@@ -75,17 +75,28 @@ public partial class SignalStation : Node
         DisconnectStation(station);
         station.DisconnectStation(this);
     }
+
+    public void DisconnectAll()
+    {
+        _connectedStations.Clear();
+    }
+
+    public void DisconnectAllTwoWay()
+    {
+        foreach (var station in _connectedStations)
+        {
+            if(station != this)
+                station.DisconnectStation(this);
+        }
+        _connectedStations.Clear();
+    }
     
 
     public override void _Notification(int what)
     {
         if (what == NotificationPredelete)
         {
-            foreach (var station in _connectedStations)
-            {
-                if(station != this)
-                    station.DisconnectStation(this);
-            }
+            DisconnectAllTwoWay();
         }
     }
 
