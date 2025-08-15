@@ -10,20 +10,34 @@ public partial class ObjectProperty : ValueSource
 {
     [Export]
     public ValueSource Target;
-    [Export]
-    public StringName Property;
 
-    [Export] public bool ErrorOnMissingNode = true;
+    [Export]
+    public StringName Property
+    {
+        get => _property;
+        set
+        {
+            _property = value;
+            _propertyPath = null;
+        }
+    }
+
+    [Export] public bool Deep = false;
+    
+    private StringName _property;
+    private NodePath _propertyPath;
     
     public Variant Get(Node source)
     {
         if (Target == null) return default;
-        return Target.GetValue(source).As<GodotObject>().Get(Property);
+        var targetObj = Target.GetValue(source).As<GodotObject>();
+        return Deep
+            ? targetObj.GetIndexed(_propertyPath ??= new NodePath(Property))
+            : targetObj.Get(Property);
     }
     public T Get<[MustBeVariant]T>(Node source)
     {
-        if (Target == null) return default;
-        return Target.GetValue(source).As<GodotObject>().Get(Property).As<T>();
+        return Get(source).As<T>();
     }
 
     public override Variant GetValue(Node source)
@@ -39,7 +53,7 @@ public partial class ObjectProperty : ValueSource
 #if TOOLS
     private NodePath _popupSelectedNodePath;
     private StringName _popupSelectedPropertyName;
-    
+
     [InspectorCustomControl(AnchorProperty = nameof(Target), AnchorMode = InspectorPropertyAnchorMode.Before)]
     public Control SelectMethod()
     {
