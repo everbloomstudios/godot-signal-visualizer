@@ -24,7 +24,11 @@ public partial class NodeValue : ValueSource
 
     public Variant Get(Node source)
     {
-        if (source == null) return default;
+        if (source == null)
+        {
+            GD.PrintErr($"Attempted to retrieve node '{NodePath}' via a {nameof(NodeValue)} value source, but parameter '{nameof(source)}' is null");
+            return default;
+        }
         var referencedNode = ErrorOnMissingNode ? source.GetNode(NodePath) : source.GetNodeOrNull(NodePath);
         if(EvaluateNestedSourceNodes && referencedNode is ValueSourceNode newSourceNode) return newSourceNode.GetValue(source);
         return referencedNode;
