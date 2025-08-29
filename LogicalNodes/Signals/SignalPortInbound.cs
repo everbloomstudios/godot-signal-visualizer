@@ -8,7 +8,7 @@ namespace LogicalNodes.Signals;
 [Tool]
 [GlobalClass]
 [Icon("res://addons/signal_graphs/icons/signal_port_in.png")]
-public partial class SignalPortInbound : SignalPort
+public partial class SignalPortInbound : SignalPort, IInboundArgumentSource
 {
     [Signal]
     public delegate void ReceivedEventHandler();
