@@ -20,26 +20,52 @@ public partial class ObjectCallable : ValueSource
 
     [Export] public ValueSource[] Args;
     
+    [Export] public bool ErrorOnMissingTarget = true;
+    
     public Variant Call(Node source)
     {
         if (Target == null) return default;
-        return Target.GetValue(source).As<GodotObject>().Call(Method, EvaluateArgs(source));
+        var obj = Target.GetValue(source).As<GodotObject>();
+        if (obj == null)
+        {
+            MissingTargetPrintError(source);
+            return default;
+        }
+        return obj.Call(Method, EvaluateArgs(source));
     }
     public T Call<[MustBeVariant]T>(Node source)
     {
         if (Target == null) return default;
-        return Target.GetValue(source).As<GodotObject>().Call(Method, EvaluateArgs(source)).As<T>();
+        var obj = Target.GetValue(source).As<GodotObject>();
+        if (obj == null)
+        {
+            MissingTargetPrintError(source);
+            return default;
+        }
+        return obj.Call(Method, EvaluateArgs(source)).As<T>();
     }
     
     public Variant CallWithArgs(Node source, params Variant[] args)
     {
         if (Target == null) return default;
-        return Target.GetValue(source).As<GodotObject>().Call(Method, args);
+        var obj = Target.GetValue(source).As<GodotObject>();
+        if (obj == null)
+        {
+            MissingTargetPrintError(source);
+            return default;
+        }
+        return obj?.Call(Method, args) ?? default;
     }
     public T CallWithArgs<[MustBeVariant]T>(Node source, params Variant[] args)
     {
         if (Target == null) return default;
-        return Target.GetValue(source).As<GodotObject>().Call(Method, args).As<T>();
+        var obj = Target.GetValue(source).As<GodotObject>();
+        if (obj == null)
+        {
+            MissingTargetPrintError(source);
+            return default;
+        }
+        return obj.Call(Method, args).As<T>() ?? default;
     }
 
     public Variant[] EvaluateArgs(Node source)
@@ -57,6 +83,12 @@ public partial class ObjectCallable : ValueSource
     public override Variant GetValue(Node source)
     {
         return Call(source);
+    }
+
+    private void MissingTargetPrintError(Node source)
+    {
+        if (ErrorOnMissingTarget)
+            GD.PrintErr($"Failed to execute {nameof(ObjectCallable)}, target returned null!\nIn: {(source?.IsInsideTree() ?? false ? source.GetPath() : source?.Name)}");
     }
 
     public override string ToString()
